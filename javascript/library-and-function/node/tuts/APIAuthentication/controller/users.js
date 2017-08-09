@@ -13,7 +13,6 @@ signToken = user => {
 module.exports = {
 	signUp: async (req, res, next) => {
 		console.log("UserController.signUp() called");
-
 		const {email, password} = req.value.body;
 
 		// const email = req.value.body.email;

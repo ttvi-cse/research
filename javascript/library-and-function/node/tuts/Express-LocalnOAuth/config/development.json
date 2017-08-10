@@ -1,0 +1,19 @@
+{
+  "host": "127.0.0.1",
+  "devURL": "http://127.0.0.1:3030",
+  "env": "development",
+  "dbURL": "mongodb://localhost/simpleLib",
+  "sessionSecret": "qwertyuiop123456789",
+  "fb": {
+    "appID": "116554458905472",
+    "appSecret": "3a72f7d475e01a551555aabc66b6914f",
+    "callbackURL": "http://127.0.0.1:3030/auth/facebook/callback"
+  },
+  "twitter": {
+    "consumerKey": "LLjd4etDsH4d5pMCnfp1OL66l",
+    "consumerSecret": "YLjPm94z9r2bVJWAEHuHo9w1xPKpT5jrLMAPDARqQayi8z7k49",
+    "accessTokenKey": "4297942094-iCwTvenwGBUSKUe9VmfvOBPHjznEbFbovx1DWFT",
+    "accessTokenSecret": "eN4Bn5cErWD7FkLiIfOokgaOw8dNjX4pYcLyYFfGn7WED",
+    "callbackURL": "http://127.0.0.1:3030/auth/twitter/callback"
+  }
+}

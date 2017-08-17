@@ -25,12 +25,16 @@ router.get('/', function(req, res) {
     return res.status(200).render('pages/index', {errMsg: null});
 });
 
+var done = function() {
+    console.log('done called');
+}
+
 router.route('/login')
     .get(function(req, res) {
         return res.status(200).render('pages/login');
     })
     .post(function(req, res, next) {
-        passport.authenticate('local-login', function(err, user, info) {
+        passport.authenticate('local-login', function(err, user, info, done)  {
             if (err) {
                 return next(err);
             }

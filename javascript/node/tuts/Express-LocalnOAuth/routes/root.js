@@ -134,10 +134,80 @@ router.get('/dashboard', isLoggedIn, function(req, res, next) {
     });
 });
 
-router.get('logout', function(req, res) {
+router.get('/logout', function(req, res) {
     req.logout();
     req.session.destroy();
     return res.redirect('/');
-})
+});
 
+// OAuth Routes
+router.get('/auth/twitter', passport.authenticate('twitter'));
+router.get('/auth/twitter/callback', 
+    passport.authenticate('twitter', {
+        successredirect: '/dashboard',
+        failureRedirect: '/login'
+    })
+);
+
+router.get('/auth/facebook', passport.authenticate('facebook', {scope: 'user_posts'}));
+router.get('/auth/facebook/callback', 
+    passport.authenticate('facebook', {
+        successredirect: '/dashboard',
+        failureRedirect: '/login'
+    })
+);
+
+// Account linkage routes
+router.route('/connect/local')
+    .get(function(req, res) {
+        return res.status(200).render('pages/sugnup', {
+            infoMsg: 'Create a local accunt to link to your profile'
+        });
+    })
+    .post(function(req, res, next) {
+        passport.authenticate('local-signup', function(err, user, info) {
+            if (err) {
+                return next(err);
+            }
+            if (!user) {
+                return res.status(409).render('pages/signup', {errMsg: info.errMsg});
+            }
+            req.login(user, function(err) {
+                if (err) {
+                    console.error(err);
+                    return next(err);
+                }
+                return res.status(302).redirect('/dashboard');
+            })
+        })(req, res, next)
+    });
+router.get('/connect/facebook',
+    passport.authorize('facebook', {scope: 'user_posts', failureRedirect: '/login'})
+);
+router.get('/connect/facebook/callback', 
+    passport.authorize('facebook', {
+        successredirect: '/dashboard',
+        failureRedirect: '/login'
+    })
+);
+// twitter
+router.get('/connect/twitter', 
+    passport.authorize('twitter', {failureRedirect: '/login'})
+);
+router.get('/connect/twitter/callback', 
+    passport.authorize('twitter', {
+        successredirect: '/dashboard',
+        failureRedirect: '/login'
+    })
+)
+router.route('/api/users/:email')
+    .get(function(req, res, next) {
+        return findUser(req, res, next);
+    })
+    .put(function(req, res, next) {
+        return updateUser(req, res, next);
+    })
+    .delete(function(req, res, next) {
+        return deleteUser(req, res, next);
+    })
 module.exports = router;

@@ -16,7 +16,7 @@ var app = express();
 /**
  * module variables
  */
-var port = process.env.PORT || 3030;
+var port = process.env.PORT || 3000;
 var env = config.env;
 var dbURL = config.dbURL;
 var sessionSecret = config.sessionSecret;

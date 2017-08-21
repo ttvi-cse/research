@@ -39,7 +39,7 @@ router.route('/login')
                 return next(err);
             }
             if (!user) {
-                return res.status(409).render('pages/login', {errMsg: info.err});
+                return res.status(409).render('pages/login', {errMsg: info.errMsg});
             }
             req.login(user, function(err) {
                 if (err) {
@@ -61,7 +61,7 @@ router.route('/signup')
                 return next(err); // will generate a 500 error
             }
             if (!user) {
-                return res.status(409).render('pagse/signup', {errMsg: info});
+                return res.statusCode(409).render('pages/signup', {errMsg: info});
             }
             req.login(user, function(err) {
                 if (err) {
@@ -79,7 +79,7 @@ router.get('/dashboard', isLoggedIn, function(req, res, next) {
     var user = req.user;
     var profile = {
         local: {
-            username: usr.local.username,
+            username: user.local.username,
             email: user.local.email
         },
         fb: {

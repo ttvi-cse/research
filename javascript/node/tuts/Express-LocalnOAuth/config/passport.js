@@ -42,11 +42,11 @@ passport.deserializeUser(function(id, done) {
 passport.use('local-signup', new LocalStrategy({
         usernameField: 'email',
         passwordField: 'password',
-        passreqToCallback: true
+        passReqToCallback: true
     },
     function(req, email, password, done) {
         process.nextTick(function() {
-            if (!req.user) {
+                if (!req.user) {
                 User.findOne({'local.email': email}, function(err, user) {
                     if (err) {
                         console.err(err);
@@ -93,12 +93,12 @@ passport.use('local-signup', new LocalStrategy({
 passport.use('local-login', new LocalStrategy({
         usernameField: 'email',
         passwordField: 'password',
-        passRepToCallback: true
+        passReqToCallback: true
     },
     function(req, email, password, done) {
         User.findOne({'local.email': email}, function(err, user) {
             if (err) return done(err);
-            if (!user) return done(null, false, {errMsh: 'User does not exist, please' +
+            if (!user) return done(null, false, {errMsg: 'User does not exist, please' +
             ' <a class="errMsg" href="/signup">signup</a>'});
             if (!user.validPassword(password)) {
                 return done(null, false, {errMsg: 'Invalid password try again'});

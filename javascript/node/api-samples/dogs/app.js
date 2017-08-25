@@ -1,76 +1,51 @@
 var express = require('express');
+var path = require('path');
+var favicon = require('serve-favicon');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
 
 mongoose.connect('mongodb://localhost/test');
 
+var index = require('./routes/index');
+var users = require('./routes/users');
+var api = require('./routes/api');
 
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-    console.log('connected');
-})
-
-var subBreedSchema = new Schema({
-    name: String,
-    images: []
-})
-
-var breedSchema = new Schema({
-    name: String,
-    subBreeds: [subBreedSchema],
-    images: []
-});
-
-var Breed = mongoose.model('Breed', breedSchema);
-
-var SubBreed = mongoose.model('SubBreed', subBreedSchema);
-
-// create and save data
-var subBreed = new SubBreed({name: 'test', images: ['testimage', 'testimage']});
-subBreed.save(function(err) {
-    if (err) console.log('err save subbreed');
-    console.log('subbreed saved');
-});
-
-var breed = new Breed({name: 'test', subBreeds: [subBreed], images: ['testimage', 'testimage']});
-breed.save(function(err) {
-    if (err) console.log('err');
-    console.log('saved');
-})
-
-
-// http get sample
-var http = require('http');
-var options = {
-    host: 'https://dog.ceo/api/breeds/list/all',
-    port: 443
-}
-
-var req = http.get(options, function(res) {
-    console.log('STATUS:' + res.statusCode());
-    console.log('HEADERS: ' + JSON.stringify(res.headers));
-
-    var bodyChunks = [];
-    res.on('data', function(chunk) {
-        bodyChunks.push(chunk);
-    })
-    .on('end', function() {
-        var body = Buffer.concat(bodyChunks);
-        console.log('BODY: ' + body);
-    });
-})
-
-req.on('error', function(e) {
-    console.log('ERROR: ' + e.message);
-})
-
-
-// application config
 var app = express();
 
-app.get('/', function(req, res) {
-    res.send('hello');
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
+
+// uncomment after placing your favicon in /public
+//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.use('/', index);
+app.use('/users', users);
+app.use('/api', api)
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
 });
 
-app.listen(3000);
+// error handler
+app.use(function(err, req, res, next) {
+  // set locals, only providing error in development
+  res.locals.message = err.message;
+  res.locals.error = req.app.get('env') === 'development' ? err : {};
+
+  // render the error page
+  res.status(err.status || 500);
+  res.render('error');
+});
+
+module.exports = app;

@@ -1,6 +1,6 @@
 const JWT = require("jsonwebtoken");
 const User = require("../models/user");
-const  {JWR_SECRET} = require("../configurations")
+const  {JWT_SECRET} = require("../configurations")
 
 signToken = user => {
 	return JWT.sign({
@@ -8,7 +8,7 @@ signToken = user => {
 		sub: user.id,
 		iat: new Date().getTime(),
 		exp: new Date().setDate(new Date().getDate() + 1)
-	}, JWR_SECRET)
+	}, JWT_SECRET)
 }
 module.exports = {
 	signUp: async (req, res, next) => {
@@ -27,9 +27,15 @@ module.exports = {
 	},
 	signIn: async (req, res, next) => {
 		// generate token
-		console.log("UserController.signIn() called");
+		// console.log('req.user', req.user);
+
+		const token = signToken(req.user);
+		res.status(200).json({ token });
+
+		console.log("Successfull login!");
 	},
 	secret: async (req, res, next) => {
-		console.log("UserController.secret() called");
+		console.log("I managed to get here!");
+		res.json({secret: 'resource'});
 	}
 }

@@ -1,3 +1,3 @@
 module.exports = {
-	JWR_SECRET: 'codeworkerauthentication'
+	JWT_SECRET: 'codeworkerauthentication'
 }

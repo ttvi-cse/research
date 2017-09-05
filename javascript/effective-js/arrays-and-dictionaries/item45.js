@@ -1,0 +1,1 @@
+// Use hasOwnProperty to Protect Against Prototype Pollution
